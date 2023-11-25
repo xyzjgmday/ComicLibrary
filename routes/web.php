@@ -24,11 +24,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('/genres/{id}', 'GenreController@update');
     $router->delete('/genres/{id}', 'GenreController@destroy');
 
-    $router->get('/readers', 'ReaderController@getAllReaders');
-    $router->get('/readers/{id}', 'ReaderController@getReaderById');
-    $router->post('/readers', 'ReaderController@createReader');
-    $router->put('/readers/{id}', 'ReaderController@updateReader');
-    $router->delete('/readers/{id}', 'ReaderController@deleteReader');
+    $router->get('/readers', 'ReaderController@index');
+    $router->get('/readers/{id}', 'ReaderController@show');
+    $router->post('/readers', 'ReaderController@create');
+    $router->put('/readers/{id}', 'ReaderController@update');
+    $router->delete('/readers/{id}', 'ReaderController@destroy');
 
     $router->get('/comics', 'ComicController@getAllComics');
     $router->get('/comics/{id}', 'ComicController@getComicById');

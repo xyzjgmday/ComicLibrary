@@ -22,7 +22,7 @@ class GenreController extends Controller
         $reader = Genre::find($id);
 
         if (!$reader) {
-            return response()->json(['success' => false, 'message' => 'Pembaca tidak ditemukan'], 404);
+            return response()->json(['success' => false, 'message' => 'Genre tidak ditemukan'], 404);
         }
 
         return response()->json(['success' => true, 'data' => $reader], 200);
@@ -47,7 +47,7 @@ class GenreController extends Controller
         $reader = Genre::find($id);
 
         if (!$reader) {
-            return response()->json(['message' => 'Pembaca tidak ditemukan'], 404);
+            return response()->json(['message' => 'Genre tidak ditemukan'], 404);
         }
 
         $validator = Validator::make($request->all(), [

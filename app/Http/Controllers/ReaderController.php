@@ -5,19 +5,19 @@ use App\Models\Reader;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class ReaderController extends Controller
 {
-    public function getAllReaders()
+    public function index()
     {
         $readers = Reader::all();
         return response()->json($readers, 200);
     }
 
-    // Metode untuk mendapatkan pembaca berdasarkan ID
-    public function getReaderById($readerId)
+    public function show($id)
     {
-        $reader = Reader::find($readerId);
+        $reader = Reader::find($id);
 
         if (!$reader) {
             return response()->json(['message' => 'Pembaca tidak ditemukan'], 404);
@@ -27,7 +27,7 @@ class ReaderController extends Controller
     }
 
     // Metode untuk membuat pembaca baru
-    public function createReader(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:readers',
@@ -39,23 +39,26 @@ class ReaderController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
+        $hashedPassword = Hash::make($request->input('password'));
+
+        $request->merge(['password' => $hashedPassword]);
+
         $reader = Reader::create($request->all());
 
         return response()->json($reader, 201);
     }
 
-    // Metode untuk mengupdate pembaca
-    public function updateReader(Request $request, $readerId)
+    public function update(Request $request, $id)
     {
-        $reader = Reader::find($readerId);
+        $reader = Reader::find($id);
 
         if (!$reader) {
             return response()->json(['message' => 'Pembaca tidak ditemukan'], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'username' => 'required|unique:readers,username,' . $readerId,
-            'email' => 'required|email|unique:readers,email,' . $readerId,
+            'username' => 'required|unique:readers,username,' . $id,
+            'email' => 'required|email|unique:readers,email,' . $id,
             'password' => 'required',
         ]);
 
@@ -63,15 +66,19 @@ class ReaderController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
+        $hashedPassword = Hash::make($request->input('password'));
+
+        $request->merge(['password' => $hashedPassword]);
+
         $reader->update($request->all());
 
         return response()->json($reader, 200);
     }
 
     // Metode untuk menghapus pembaca
-    public function deleteReader($readerId)
+    public function destroy($id)
     {
-        $reader = Reader::find($readerId);
+        $reader = Reader::find($id);
 
         if (!$reader) {
             return response()->json(['message' => 'Pembaca tidak ditemukan'], 404);
