@@ -20,8 +20,9 @@ class CreateReadersTable extends Migration
             $table->string('password');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('last_login')->nullable();
-            $table->json('favorite_comics')->nullable(); // Jika menggunakan MySQL 5.7 atau lebih tinggi
-            // $table->foreign('favorite_comics')->references('comic_id')->on('comics'); // Relasi jika menggunakan MySQL 5.7 atau lebih tinggi
+            $table->json('favorite_comics')->nullable(); 
+            
+            $table->foreign('favorite_comics')->references('comic_id')->on('comics'); 
         });
     }
 
