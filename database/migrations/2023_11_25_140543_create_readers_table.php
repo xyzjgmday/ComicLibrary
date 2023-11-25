@@ -14,15 +14,13 @@ class CreateReadersTable extends Migration
     public function up()
     {
         Schema::create('readers', function (Blueprint $table) {
-            $table->id('reader_id');
+            $table->bigIncrements('id');
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->timestamp('created_at')->useCurrent();
+            $table->string('api_token');
             $table->timestamp('last_login')->nullable();
-            $table->json('favorite_comics')->nullable(); 
-            
-            $table->foreign('favorite_comics')->references('comic_id')->on('comics'); 
+            $table->timestamps();
         });
     }
 

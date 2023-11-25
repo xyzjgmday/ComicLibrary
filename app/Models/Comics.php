@@ -1,22 +1,29 @@
+<?php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Comics extends Model
 {
+    protected $table = 'comics';
+    public $timestamps = true;
     protected $fillable = [
-        'title', 'author', 'genre', 'description',
-        'release_date', 'status', 'reader_id',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
+        'title',
+        'author',
+        'genre_id',
+        'description',
         'release_date',
+        'status',
+        'reader_id',
     ];
 
-    public function reader()
+    public function readers()
     {
-        return $this->belongsTo(Reader::class, 'reader_id', 'reader_id');
+        return $this->belongsTo(Reader::class, 'reader_id');
+    }
+
+    public function genres()
+    {
+        return $this->belongsTo(Genre::class, 'genre_id');
     }
 }

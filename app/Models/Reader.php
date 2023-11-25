@@ -1,15 +1,18 @@
+<?php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Reader extends Model
 {
+    protected $table = 'readers';
+    public $timestamps = true;
     protected $fillable = [
-        'username', 'email', 'password', 'last_login', 'favorite_comics',
-    ];
-
-    protected $casts = [
-        'favorite_comics' => 'json',
+        'username',
+        'email',
+        'password',
+        'last_login',
+        'api_token',
     ];
 
     protected $dates = [
@@ -17,9 +20,4 @@ class Reader extends Model
         'updated_at',
         'last_login',
     ];
-
-    public function comics()
-    {
-        return $this->hasMany(Comic::class, 'reader_id', 'reader_id');
-    }
 }
