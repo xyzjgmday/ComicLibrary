@@ -30,10 +30,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('/readers/{id}', 'ReaderController@update');
     $router->delete('/readers/{id}', 'ReaderController@destroy');
 
-    $router->get('/comics', 'ComicController@getAllComics');
-    $router->get('/comics/{id}', 'ComicController@getComicById');
-    $router->post('/comics', 'ComicController@createComic');
-    $router->put('/comics/{id}', 'ComicController@updateComic');
-    $router->delete('/comics/{id}', 'ComicController@deleteComic');
+    $router->get('/comics', 'ComicController@index');
+    $router->get('/comics/{id}', 'ComicController@show');
+    $router->post('/comics', 'ComicController@create');
+    $router->put('/comics/{id}', 'ComicController@update');
+    $router->delete('/comics/{id}', 'ComicController@destroy');
 });
 

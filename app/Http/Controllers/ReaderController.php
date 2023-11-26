@@ -11,8 +11,21 @@ class ReaderController extends Controller
 {
     public function index()
     {
-        $readers = Reader::all();
-        return response()->json($readers, 200);
+        try {
+            $readers = Reader::all();
+    
+            return response()->json([
+                'success' => true,
+                'data' => $readers,
+                'message' => 'Daftar pembaca berhasil diambil.',
+            ], 200);
+        } catch (\Exception $e) {
+            // Tangkap dan tangani kesalahan jika ada
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil daftar pembaca. ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function show($id)

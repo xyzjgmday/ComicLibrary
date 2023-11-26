@@ -9,23 +9,32 @@ use Illuminate\Support\Facades\Validator;
 
 class ComicController extends Controller
 {
-    // Metode untuk mendapatkan semua komik atau komik berdasarkan pembaca
-    public function getAllComics(Request $request)
+    public function index(Request $request)
     {
-        $user_id = $request->input('user_id');
-        $query = Comics::query();
+        try {
+            $readerId = $request->input('reader_id');
+            $query = Comic::query();
 
-        if ($user_id) {
-            $query->where('reader_id', $user_id);
+            if ($readerId) {
+                $query->where('reader_id', $readerId);
+            }
+
+            $comics = $query->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $comics,
+                'message' => $readerId ? 'Daftar komik dari pembaca tertentu berhasil diambil.' : 'Daftar semua komik berhasil diambil.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil daftar komik. ' . $e->getMessage(),
+            ], 500);
         }
-
-        $comics = $query->get();
-
-        return response()->json($comics, 200);
     }
 
-    // Metode untuk mendapatkan komik berdasarkan ID
-    public function getComicById($ComicsId)
+    public function show($ComicsId)
     {
         $Comics = Comics::find($ComicsId);
 
@@ -36,8 +45,7 @@ class ComicController extends Controller
         return response()->json($Comics, 200);
     }
 
-    // Metode untuk membuat komik baru
-    public function createComics(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
@@ -62,7 +70,7 @@ class ComicController extends Controller
     }
 
     // Metode untuk mengupdate komik
-    public function updateComics(Request $request, $ComicsId)
+    public function update(Request $request, $ComicsId)
     {
         $Comics = Comics::find($ComicsId);
 
@@ -93,7 +101,7 @@ class ComicController extends Controller
     }
 
     // Metode untuk menghapus komik
-    public function deleteComics($ComicsId)
+    public function destroy($ComicsId)
     {
         $Comics = Comics::find($ComicsId);
 
