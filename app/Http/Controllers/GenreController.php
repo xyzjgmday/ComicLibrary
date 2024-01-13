@@ -22,7 +22,7 @@ class GenreController extends Controller
         $reader = Genre::find($id);
 
         if (!$reader) {
-            return response()->json(['success' => false, 'message' => 'Pembaca tidak ditemukan'], 404);
+            return response()->json(['success' => false, 'message' => 'Genre tidak ditemukan'], 404);
         }
 
         return response()->json(['success' => true, 'data' => $reader], 200);
@@ -38,16 +38,21 @@ class GenreController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $reader = Genre::create($request->all());
-        return response()->json($reader, 201);
+        $genre = new Genre;
+        $genre->name = $request->input('name');
+        $genre->setAttribute('updated_at', null);
+        $genre->save();
+
+        return response()->json($genre, 201);
     }
+
 
     public function update(Request $request, $id)
     {
-        $reader = Genre::find($id);
+        $genre = Genre::find($id);
 
-        if (!$reader) {
-            return response()->json(['message' => 'Pembaca tidak ditemukan'], 404);
+        if (!$genre) {
+            return response()->json(['message' => 'Genre tidak ditemukan'], 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -61,8 +66,8 @@ class GenreController extends Controller
         $data = $request->all();
         $data['updated_at'] = Carbon::now();
 
-        $reader->update($data);
-        return response()->json($reader, 200);
+        $genre->update($data);
+        return response()->json($genre, 200);
     }
 
     public function destroy($id)
@@ -70,11 +75,11 @@ class GenreController extends Controller
         $reader = Genre::find($id);
 
         if (!$reader) {
-            return response()->json(['message' => 'Pembaca tidak ditemukan'], 404);
+            return response()->json(['message' => 'Genre tidak ditemukan'], 404);
         }
 
         $reader->delete();
 
-        return response()->json(['message' => 'Pembaca berhasil dihapus'], 200);
+        return response()->json(['message' => 'Genre berhasil dihapus'], 200);
     }
 }

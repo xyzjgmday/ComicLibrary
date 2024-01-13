@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reader extends Model
 {
     protected $table = 'readers';
-    public $timestamps = true;
+
     protected $fillable = [
         'username',
         'email',
@@ -16,8 +16,17 @@ class Reader extends Model
     ];
 
     protected $dates = [
-        'created_at',
-        'updated_at',
-        'last_login',
+        'last_login'
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d-m-Y H:i:s', strtotime($value));
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return $value ? date('d-m-Y H:i:s', strtotime($value)) : null;
+    }
+
 }

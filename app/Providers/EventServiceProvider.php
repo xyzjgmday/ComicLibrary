@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\LastLoginEvent;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -15,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\ExampleEvent::class => [
             \App\Listeners\ExampleListener::class,
         ],
+        LastLoginEvent::class => [
+            LastLoginEvent::class,
+        ],
     ];
 
     /**
@@ -22,6 +26,13 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return bool
      */
+
+    public function boot()
+    {
+        parent::boot();
+    }
+
+
     public function shouldDiscoverEvents()
     {
         return false;

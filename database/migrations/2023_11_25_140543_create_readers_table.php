@@ -18,7 +18,7 @@ class CreateReadersTable extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('api_token');
+            $table->string('api_token')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->timestamps();
         });

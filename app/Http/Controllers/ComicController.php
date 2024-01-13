@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Comics;
 
 use Illuminate\Http\Request;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ComicController extends Controller
 {
-    // Metode untuk mendapatkan semua komik atau komik berdasarkan pembaca
     public function getAllComics(Request $request)
     {
         $user_id = $request->input('user_id');
@@ -24,7 +24,6 @@ class ComicController extends Controller
         return response()->json($comics, 200);
     }
 
-    // Metode untuk mendapatkan komik berdasarkan ID
     public function getComicById($ComicsId)
     {
         $Comics = Comics::find($ComicsId);
@@ -36,7 +35,6 @@ class ComicController extends Controller
         return response()->json($Comics, 200);
     }
 
-    // Metode untuk membuat komik baru
     public function createComics(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -61,7 +59,6 @@ class ComicController extends Controller
         return response()->json($Comics, 201);
     }
 
-    // Metode untuk mengupdate komik
     public function updateComics(Request $request, $ComicsId)
     {
         $Comics = Comics::find($ComicsId);
@@ -92,7 +89,6 @@ class ComicController extends Controller
         return response()->json($Comics, 200);
     }
 
-    // Metode untuk menghapus komik
     public function deleteComics($ComicsId)
     {
         $Comics = Comics::find($ComicsId);

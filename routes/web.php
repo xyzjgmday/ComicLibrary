@@ -13,16 +13,24 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$router->get('/', function () {
+    return response()->json(['service_name' => 'PHP Service App', 'status' => 'Running']);
+});
+
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
+});
+
+$router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
+    $router->post('/genres', 'GenreController@create');
+    $router->put('/genres/{id}', 'GenreController@update');
+    $router->delete('/genres/{id}', 'GenreController@destroy');
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/genres', 'GenreController@index');
     $router->get('/genres/{id}', 'GenreController@show');
-    $router->post('/genres', 'GenreController@create');
-    $router->put('/genres/{id}', 'GenreController@update');
-    $router->delete('/genres/{id}', 'GenreController@destroy');
 
     $router->get('/readers', 'ReaderController@getAllReaders');
     $router->get('/readers/{id}', 'ReaderController@getReaderById');

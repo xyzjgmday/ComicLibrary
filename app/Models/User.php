@@ -9,25 +9,55 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array
      */
+    protected $table = 'readers';
+
     protected $fillable = [
-        'name', 'email',
+        'username',
+        'email',
+        'password',
+        'status',
+        'api_token',
     ];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
-     * @var string[]
+     * @var array
      */
+
     protected $hidden = [
-        'password',
+        'password'
     ];
+
+    protected $dates = [
+        'last_login'
+    ];
+
+    protected static function booted()
+    {
+        static::updating(function ($model) {
+            $model->updated_at = $model->getOriginal('updated_at');
+        });
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getkey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

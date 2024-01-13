@@ -10,10 +10,6 @@ class Genre extends Model
      * Table database
      */
     protected $table = 'genres';
-    public $timestamps = true;
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
 
     /**
      * The attributes that are mass assignable.
@@ -23,4 +19,14 @@ class Genre extends Model
     protected $fillable = [
         'name'
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d-m-Y H:i:s', strtotime($value));
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return $value ? date('d-m-Y H:i:s', strtotime($value)) : null;
+    }
 }
