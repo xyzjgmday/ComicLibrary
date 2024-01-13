@@ -10,23 +10,32 @@ use Illuminate\Support\Facades\Validator;
 
 class ComicController extends Controller
 {
-    public function getAllComics(Request $request)
+    public function index(Request $request)
     {
-        $user_id = $request->input('user_id');
-        $query = Comics::query();
+        try {
+            $readerId = $request->input('rd');
 
-        if ($user_id) {
-            $query->where('reader_id', $user_id);
+            $comics = Comics::when($readerId, function ($query) use ($readerId) {
+                return $query->where('reader_id', $readerId);
+            })->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $comics,
+                'message' => $readerId ? 'Daftar komik dari pembaca tertentu berhasil diambil.' : 'Daftar semua komik berhasil diambil.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil daftar komik. ' . $e->getMessage(),
+            ], 500);
         }
-
-        $comics = $query->get();
-
-        return response()->json($comics, 200);
     }
 
-    public function getComicById($ComicsId)
+
+    public function show($id)
     {
-        $Comics = Comics::find($ComicsId);
+        $Comics = Comics::with(['genres', 'readers:id,username,email,created_at'])->find($id);
 
         if (!$Comics) {
             return response()->json(['message' => 'Komik tidak ditemukan'], 404);
@@ -35,33 +44,38 @@ class ComicController extends Controller
         return response()->json($Comics, 200);
     }
 
-    public function createComics(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'author' => 'required',
-            'genre' => 'required',
             'description' => 'required',
             'release_date' => 'required|date',
-            'language' => 'required',
-            'average_rating' => 'required|numeric',
-            'number_of_chapters' => 'required|integer',
             'status' => 'required',
-            'reader_id' => 'required|exists:readers,reader_id',
+            'genre_id' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $Comics = Comics::create($request->all());
+        $comics = new Comics;
+        $comics->title = $request->input('title');
+        $comics->author = $request->input('author');
+        $comics->description = $request->input('description');
+        $comics->release_date = $request->input('release_date');
+        $comics->status = $request->input('status');
+        $comics->genre_id = $request->input('genre_id');
+        $comics->setAttribute('updated_at', null);
+        $comics->save();
 
-        return response()->json($Comics, 201);
+        return response()->json($comics, 201);
     }
 
-    public function updateComics(Request $request, $ComicsId)
+    // Metode untuk mengupdate komik
+    public function update(Request $request, $id)
     {
-        $Comics = Comics::find($ComicsId);
+        $Comics = Comics::find($id);
 
         if (!$Comics) {
             return response()->json(['message' => 'Komik tidak ditemukan'], 404);
@@ -70,14 +84,10 @@ class ComicController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'author' => 'required',
-            'genre' => 'required',
             'description' => 'required',
             'release_date' => 'required|date',
-            'language' => 'required',
-            'average_rating' => 'required|numeric',
-            'number_of_chapters' => 'required|integer',
             'status' => 'required',
-            'reader_id' => 'required|exists:readers,reader_id',
+            'genre_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -89,9 +99,9 @@ class ComicController extends Controller
         return response()->json($Comics, 200);
     }
 
-    public function deleteComics($ComicsId)
+    public function destroy($id)
     {
-        $Comics = Comics::find($ComicsId);
+        $Comics = Comics::find($id);
 
         if (!$Comics) {
             return response()->json(['message' => 'Komik tidak ditemukan'], 404);

@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->date('release_date');
             $table->string('status');
             $table->unsignedBigInteger('genre_id');
-            $table->unsignedBigInteger('reader_id');
+            $table->unsignedBigInteger('reader_id')->nullable();
             $table->timestamps();
 
             $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');

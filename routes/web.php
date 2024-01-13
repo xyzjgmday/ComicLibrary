@@ -26,22 +26,23 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
     $router->post('/genres', 'GenreController@create');
     $router->put('/genres/{id}', 'GenreController@update');
     $router->delete('/genres/{id}', 'GenreController@destroy');
+
+    $router->get('/readers', 'ReaderController@index');
+    $router->get('/readers/{id}', 'ReaderController@show');
+    $router->post('/readers', 'ReaderController@create');
+    $router->put('/readers/{id}', 'ReaderController@update');
+    $router->delete('/readers/{id}', 'ReaderController@destroy');
+
+    $router->post('/comics', 'ComicController@create');
+    $router->put('/comics/{id}', 'ComicController@update');
+    $router->delete('/comics/{id}', 'ComicController@destroy');
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/genres', 'GenreController@index');
     $router->get('/genres/{id}', 'GenreController@show');
 
-    $router->get('/readers', 'ReaderController@getAllReaders');
-    $router->get('/readers/{id}', 'ReaderController@getReaderById');
-    $router->post('/readers', 'ReaderController@createReader');
-    $router->put('/readers/{id}', 'ReaderController@updateReader');
-    $router->delete('/readers/{id}', 'ReaderController@deleteReader');
-
-    $router->get('/comics', 'ComicController@getAllComics');
-    $router->get('/comics/{id}', 'ComicController@getComicById');
-    $router->post('/comics', 'ComicController@createComic');
-    $router->put('/comics/{id}', 'ComicController@updateComic');
-    $router->delete('/comics/{id}', 'ComicController@deleteComic');
+    $router->get('/comics', 'ComicController@index');
+    $router->get('/comics/{id}', 'ComicController@show');
 });
 

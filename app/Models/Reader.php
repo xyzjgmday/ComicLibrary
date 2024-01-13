@@ -12,7 +12,10 @@ class Reader extends Model
         'email',
         'password',
         'last_login',
-        'api_token',
+    ];
+
+    protected $attributes = [
+        'api_token' => '',
     ];
 
     protected $dates = [

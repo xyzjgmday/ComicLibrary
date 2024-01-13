@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Reader;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class ReaderController extends Controller
 {
-    public function getAllReaders()
+    public function index()
     {
         $readers = Reader::all()->makeHidden(['password']);
         return response()->json($readers, 200);
     }
 
-    public function getReaderById($id)
+    public function show($id)
     {
         $reader = Reader::find($id)->makeHidden(['password']);
 
@@ -27,7 +27,7 @@ class ReaderController extends Controller
         return response()->json($reader, 200);
     }
 
-    public function createReader(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|unique:readers',
@@ -39,6 +39,10 @@ class ReaderController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
+        $hashedPassword = Hash::make($request->input('password'));
+
+        $request->merge(['password' => $hashedPassword]);
+
         $reader = new Reader;
         $reader->username = $request->input('username');
         $reader->email = $request->input('email');
@@ -49,7 +53,7 @@ class ReaderController extends Controller
         return response()->json($reader, 201);
     }
 
-    public function updateReader(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $reader = Reader::find($id);
 
@@ -67,15 +71,17 @@ class ReaderController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $data = $request->all();
-        $data['updated_at'] = Carbon::now();
+        $hashedPassword = Hash::make($request->input('password'));
 
+        $request->merge(['password' => $hashedPassword]);
+
+        $data = $request->all();
         $reader->update($data);
 
         return response()->json($reader, 200);
     }
 
-    public function deleteReader($id)
+    public function destroy($id)
     {
         $reader = Reader::find($id);
 
