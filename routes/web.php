@@ -36,6 +36,11 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
     $router->post('/comics', 'ComicController@create');
     $router->put('/comics/{id}', 'ComicController@update');
     $router->delete('/comics/{id}', 'ComicController@destroy');
+    
+
+    //end point transactional
+    $router->get('read/{idComics}', 'ComicController@read');
+    $router->get('unread/{idComics}', 'ComicController@unread');
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {

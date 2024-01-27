@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comics;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,7 +30,6 @@ class ComicController extends Controller
             ], 500);
         }
     }
-
 
     public function show($id)
     {
@@ -72,7 +70,6 @@ class ComicController extends Controller
         return response()->json($comics, 201);
     }
 
-    // Metode untuk mengupdate komik
     public function update(Request $request, $id)
     {
         $Comics = Comics::find($id);
@@ -110,5 +107,37 @@ class ComicController extends Controller
         $Comics->delete();
 
         return response()->json(['message' => 'Komik berhasil dihapus'], 200);
+    }
+
+    public function read($idComics)
+    {
+        $comic = Comics::find($idComics);
+
+        if (!$comic) {
+            return response()->json(['message' => 'Komik tidak ditemukan'], 404);
+        }
+
+        $comic->update(['reader_id' => auth()->id(), 'status' => 1]);
+        return response()->json([
+            'success' => true,
+            'data' => $comic,
+            'message' => 'Komik sedang dibaca!',
+        ], 200);
+    }
+
+    public function unread($idComics)
+    {
+        $comic = Comics::find($idComics);
+
+        if (!$comic) {
+            return response()->json(['message' => 'Komik tidak ditemukan'], 404);
+        }
+
+        $comic->update(['reader_id' => null, 'status' => 0]);
+        return response()->json([
+            'success' => true,
+            'data' => $comic,
+            'message' => 'Komik telah dibaca.',
+        ], 200);
     }
 }
